@@ -20,6 +20,10 @@
 #include<math.h>
 #include"PSO.H"
 
+double temp[100][100] = { 0 };
+
+
+
 //微粒的无参构造函数
 PARTICLE::PARTICLE()
 {
@@ -364,16 +368,11 @@ double PSO::GetBest(double* r)
 	return Particle[GBestIndex].FitBest;
 }
 
-int main()//用来读取数据和操作
+//读写数据
+bool read()
 {
-	//int row=100;
-	//int columns=100;
-	//std::cout << "please enter the number of rowsz:" << std::endl;
-	//std::cin >> row;
-	//std::cout << "please enter the number of columns:" << std::endl;
-	//std::cin >> columns;
-	double temp[20][10];
-	
+	int count1 = 0;//计数行
+	int count2 = 0;//计数列
 	////******写数据操作
 	std::ofstream outFile;
 	outFile.open("test1.csv", std::ios::out | std::ios::trunc);//创建文件test1
@@ -387,6 +386,7 @@ int main()//用来读取数据和操作
 	{
 		std::cout << "Error: opening file fail" << std::endl;
 		std::exit(1);
+		return false;
 	}
 	else {
 		std::cout << "opening file successfully!!!!" << std::endl;
@@ -395,53 +395,56 @@ int main()//用来读取数据和操作
 	std::istringstream sin;         //将整行字符串line读入到字符串istringstream中
 	std::vector<std::string> words; //声明一个字符串向量
 	std::string word;
-
 	// 读取标题行
 	std::getline(csv_data, line);
 	// 读取数据
 	while (std::getline(csv_data, line))
 	{
+
 		sin.clear();
 		sin.str(line);
 		words.clear();
 		while (std::getline(sin, word, ',')) //将字符串流sin中的字符读到field字符串中，以逗号为分隔符
 		{
+			double n = atof(word.c_str());
+			temp[count1][count2] = n;
 			words.push_back(word); //将每一格中的数据逐个push
-			//调用粒子群算法进行优化 然后将得到的结果写进test1.csv文件中 
-			//模拟测试 构造一个二次函数 y=-x^2+3,给定x一个数列 求解其在数列中的最大值
-			//word = word + ",";
-			std::cout << word;//用于测试读入的数据是否正确，其中第一行为标题
-			outFile << word << std::endl;
+
+
+			//outFile << word << std::endl;
+
+			count2++;
 		}
-		
-			std:: string temmp;
-			words.push_back(temmp);
-		
+		count2 = 0;
+
+		std::string temmp;
+		words.push_back(temmp);
+
 		std::cout << std::endl;
-		// do something
+		
+		count1++;
 	}
-
 	csv_data.close();//读数据关闭
-	outFile.close();//写数据关闭
-	{
-		std::cout << "writing file successfully!!!" << std::endl;
-	}
 
-	//std::vector<std::vector<int>> user_arr;
-	//std::ifstream fp("test.csv"); //定义声明一个ifstream对象，指定文件路径
-	//std::string line;
-	//std::getline(fp, line); //跳过列名，第一行不做处理
-	//while (getline(fp, line)) { //循环读取每行数据
-	//	std::vector<int> data_line;
-	//	std::string number;
-	//	std::istringstream readstr(line); //string数据流化
-	//	//将一行数据按'，'分割
-	//	for (int j = 0; j < 11; j++) { //可根据数据的实际情况取循环获取
-	//		getline(readstr, number, ','); //循环读取数据
-	//		data_line.push_back(atoi(number.c_str())); //字符串传int
-	//	}
-	//	user_arr.push_back(data_line); //插入到vector中
-	//}
+	outFile.close();//写数据关闭
+	
+	return true;
+}
+
+
+int main()//用来读取数据和操作
+{
+	read();
+	
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			std::cout << temp[i][j]<<" ";
+		}
+		std::cout << std::endl;
+	}
+	
 	return 0;
 	
 }
