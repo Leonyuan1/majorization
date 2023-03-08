@@ -20,7 +20,7 @@
 #include<math.h>
 #include"PSO.H"
 
-double temp[100][100] = { 0 };
+double temp[100][100] = { 0 };//定义的一个中间数组 用来存储读入数据调用操作
 
 
 
@@ -50,6 +50,8 @@ PARTICLE::~PARTICLE()
 		delete[] XBest;
 	}
 }
+
+
 //设置微粒的维数
 void PARTICLE::SetDim(int d)
 {
@@ -435,15 +437,12 @@ bool read()
 int main()//用来读取数据和操作
 {
 	read();
+	PARTICLE A;
+	A.SetDim(3);
 	
-	for (int i = 0; i < 10; i++)
-	{
-		for (int j = 0; j < 10; j++)
-		{
-			std::cout << temp[i][j]<<" ";
-		}
-		std::cout << std::endl;
-	}
+
+	
+
 	
 	return 0;
 	
