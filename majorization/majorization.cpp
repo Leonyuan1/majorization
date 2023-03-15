@@ -448,12 +448,11 @@ bool read()
 
 				 count1++;
 			 }
-			 temp[count1] = -3.1415926;
-			 count1++;
+			 
 			 temp[count3] = demension_count;
 		 }
-		 
-
+		 temp[count1] = -3.1415926;
+		 count1++;
 		 temp[count1] = demension;
 		 csv_data.close();//读数据关闭
 
