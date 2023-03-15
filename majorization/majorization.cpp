@@ -19,8 +19,10 @@
 #include<time.h>
 #include<math.h>
 #include"PSO.H"
+using namespace std;
 
-double temp[100][100] = { 0 };//定义的一个中间数组 用来存储读入数据调用操作
+
+double temp[1000] = { 0 };//定义的一个中间数组 用来存储读入数据调用操作
 
 
 
@@ -32,6 +34,7 @@ PARTICLE::PARTICLE()
 	XBest = 0;
 	Dim = 0;
 }
+
 //微粒的有参构造函数
 PARTICLE::PARTICLE(int n)
 {
@@ -40,6 +43,7 @@ PARTICLE::PARTICLE(int n)
 	V = new double[Dim];
 	XBest = new double[Dim];
 }
+
 //微粒的析构函数
 PARTICLE::~PARTICLE()
 {
@@ -50,7 +54,6 @@ PARTICLE::~PARTICLE()
 		delete[] XBest;
 	}
 }
-
 
 //设置微粒的维数
 void PARTICLE::SetDim(int d)
@@ -89,6 +92,7 @@ PSO::PSO()
 	C2 = 2;
 	Com = 0;
 }
+
 //PSO的有参构造函数
 PSO::PSO(int dim, int n)
 {
@@ -110,6 +114,7 @@ PSO::PSO(int dim, int n)
 	C2 = 2;
 	Com = 0;
 }
+
 //PSO的析构函数
 PSO::~PSO()
 {
@@ -142,6 +147,7 @@ void PSO::SetXup(double* up)
 		Xup[i] = up[i];
 	}
 }
+
 //设置坐标下界
 void PSO::SetXdown(double* d)
 {
@@ -154,6 +160,7 @@ void PSO::SetXdown(double* d)
 		Xdown[i] = d[i];
 	}
 }
+
 //设置最大速度
 void PSO::SetVmax(double* max)
 {
@@ -166,6 +173,7 @@ void PSO::SetVmax(double* max)
 		Vmax[i] = max[i];
 	}
 }
+
 void PSO::SetVmax(double p)
 {
 	if (!Particle)
@@ -177,6 +185,7 @@ void PSO::SetVmax(double p)
 		Vmax[i] = (Xup[i] - Xdown[i]) * p;
 	}
 }
+
 //初始化群体
 void PSO::Initialize()
 {
@@ -208,6 +217,7 @@ void PSO::Initialize()
 	}
 }
 //计算群体各个微粒的适合度
+
 void PSO::CalFit()
 {
 	if (!Particle)
@@ -220,6 +230,7 @@ void PSO::CalFit()
 	}
 }
 //微粒飞翔，产生新一代微粒
+
 void PSO::ParticleFly()
 {
 	static double FitBak[100];//用来存放备份的适合度值
@@ -330,6 +341,7 @@ PARTICLE& PSO::Run(int n)
 	delete[] opt_a;
 	return Particle[GBestIndex];
 }
+
 //按最佳适合度运行群粒算法
 PARTICLE& PSO::Run(double fit)
 {
@@ -360,6 +372,7 @@ PARTICLE& PSO::Run(double fit)
 	delete[] opt_a;
 	return Particle[GBestIndex];
 }
+
 //返回最佳个体
 double PSO::GetBest(double* r)
 {
@@ -370,68 +383,89 @@ double PSO::GetBest(double* r)
 	return Particle[GBestIndex].FitBest;
 }
 
-//读写数据
+
+
+
+
 bool read()
 {
-	int count1 = 0;//计数行
-	int count2 = 0;//计数列
-	////******写数据操作
-	std::ofstream outFile;
-	outFile.open("test1.csv", std::ios::out | std::ios::trunc);//创建文件test1
-	outFile << "函数x值" << std::endl;// 写入标题行
+	int data_num;
+	int demension_count = 0;//计数维数
+	int count1 = 0;//计数数组光标
+	int count2 = 1;//用来计数数据块数
+	int count3 = 0;//用来存储维数位的光标
+	int demension = 0;//用来传输维数
 
-	////******读数据操作
-	std::ifstream csv_data("test.csv", std::ios::in);//数据文件为test
-	std::string line;//字符串line用来存储一行的数据
+	////******读数据操作  将数据读入一维数组里
 
-	if (!csv_data.is_open())//打开成功检验
-	{
-		std::cout << "Error: opening file fail" << std::endl;
-		std::exit(1);
-		return false;
-	}
-	else {
-		std::cout << "opening file successfully!!!!" << std::endl;
-	}
+	 cout << "请输入你要读取的数据块数：" <<   endl;
+	 cin >> data_num;
 
-	std::istringstream sin;         //将整行字符串line读入到字符串istringstream中
-	std::vector<std::string> words; //声明一个字符串向量
-	std::string word;
-	// 读取标题行
-	std::getline(csv_data, line);
-	// 读取数据
-	while (std::getline(csv_data, line))
-	{
+	 count3 = count1;
+	 count1++;
+	 temp[count1] = count2;
+	 count1++;
+	 for (int iii = 1; iii <= data_num; iii++)
+	 {
+		 string DataFile_name;
+		 cout << "请输入第"<<iii<<"个数据文件名（加后缀）:" << endl;
+		 cin >> DataFile_name;
+		 ifstream csv_data(DataFile_name, ios::in);//数据文件为test
+		 string line;//字符串line用来存储一行的数据
 
-		sin.clear();
-		sin.str(line);
-		words.clear();
-		while (std::getline(sin, word, ',')) //将字符串流sin中的字符读到field字符串中，以逗号为分隔符
-		{
-			double n = atof(word.c_str());
-			temp[count1][count2] = n;
-			words.push_back(word); //将每一格中的数据逐个push
+		 if (!csv_data.is_open())//打开成功检验
+		 {
+			 cout << "Error: opening file fail" << endl;
+			 exit(1);
+			 return false;
+		 }
+		 else {
+			 cout << "the data"<<iii<<"is opened successfully!!!!" << endl;
+		 }
 
+		 istringstream sin;         //将整行字符串line读入到字符串istringstream中
+		 vector< string> words; //声明一个字符串向量
+		 string word;
+		 // 读取标题行
+		 // getline(csv_data, line);
 
-			//outFile << word << std::endl;
+		 // 读取数据
+		 while (getline(csv_data, line))
+		 {
 
-			count2++;
-		}
-		count2 = 0;
+			 sin.clear();
+			 sin.str(line);
+			 words.clear();
 
-		std::string temmp;
-		words.push_back(temmp);
+			 demension_count = 0;
+			 while (getline(sin, word, ',')) //将字符串流sin中的字符读到field字符串中，以逗号为分隔符
+			 {
+				 demension_count++;
+				 double n = atof(word.c_str());
+				 temp[count1] = n;
+				 words.push_back(word); //将每一格中的数据逐个push
+				 //outFile << word <<  endl;
 
-		std::cout << std::endl;
-		
-		count1++;
-	}
-	csv_data.close();//读数据关闭
+				 count1++;
+			 }
+			 temp[count1] = -3.1415926;
+			 count1++;
+			 temp[count3] = demension_count;
+		 }
+		 
 
-	outFile.close();//写数据关闭
+		 temp[count1] = demension;
+		 csv_data.close();//读数据关闭
+
+	 }
 	
 	return true;
 }
+
+
+
+
+
 
 
 int main()//用来读取数据和操作
@@ -439,11 +473,80 @@ int main()//用来读取数据和操作
 	read();
 	PARTICLE A;
 	A.SetDim(3);
-	
-
+	for (int i = 0; i < 1000; i++)
+	{
+		cout << temp[i] << endl;
+	}
 	
 
 	
 	return 0;
 	
 }
+
+
+
+
+
+//读写数据
+//bool read()
+//{
+//	int count1 = 0;//计数行
+//	int count2 = 0;//计数列
+//	////******写数据操作
+//	 ofstream outFile;
+//	outFile.open("test1.csv",  ios::out |  ios::trunc);//创建文件test1
+//	outFile << "函数x值" <<  endl;// 写入标题行
+//
+//	////******读数据操作
+//	 ifstream csv_data("test.csv",  ios::in);//数据文件为test
+//	 string line;//字符串line用来存储一行的数据
+//
+//	if (!csv_data.is_open())//打开成功检验
+//	{
+//		 cout << "Error: opening file fail" <<  endl;
+//		 exit(1);
+//		return false;
+//	}
+//	else {
+//		 cout << "opening file successfully!!!!" <<  endl;
+//	}
+//
+//	 istringstream sin;         //将整行字符串line读入到字符串istringstream中
+//	 vector< string> words; //声明一个字符串向量
+//	 string word;
+//	// 读取标题行
+//	 getline(csv_data, line);
+//	// 读取数据
+//	while ( getline(csv_data, line))
+//	{
+//
+//		sin.clear();
+//		sin.str(line);
+//		words.clear();
+//		while ( getline(sin, word, ',')) //将字符串流sin中的字符读到field字符串中，以逗号为分隔符
+//		{
+//			double n = atof(word.c_str());
+//			temp[count1][count2] = n;
+//			words.push_back(word); //将每一格中的数据逐个push
+//
+//
+//			//outFile << word <<  endl;
+//
+//			count2++;
+//		}
+//		count2 = 0;
+//
+//		 string temmp;
+//		words.push_back(temmp);
+//
+//		 cout <<  endl;
+//		
+//		count1++;
+//	}
+//	csv_data.close();//读数据关闭
+//
+//	outFile.close();//写数据关闭
+//	
+//	return true;
+//}
