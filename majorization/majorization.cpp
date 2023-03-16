@@ -23,7 +23,8 @@ using namespace std;
 
 
 double temp[620] = { 0 };//定义的一个中间数组 用来存储读入数据调用操作
-
+double DataBlock_num[10] = {0};//定义一个计数数组，用来存储每一块数据在一维数组的位置下标
+double DataBlock_size[10] = { 0 };//定义一个计数数组，用来存储每一块数据的数据量
 
 
 //微粒的无参构造函数
@@ -394,7 +395,9 @@ bool read()
 	int count1 = 0;//计数数组光标
 	int count2 = 1;//用来计数数据块数
 	int count3 = 0;//用来存储维数位的下标
+	int count4 = 0;//用来计数每块的数据量
 	int demension = 0;//用来传输维数
+
 
 	////******读数据操作  将数据读入一维数组里
 
@@ -404,7 +407,9 @@ bool read()
 	 
 	 for (int iii = 1; iii <= data_num; iii++)
 	 {
+		 
 		 count3 = count1;
+		 DataBlock_num[iii-1] = count3;
 		 count1++;
 		 temp[count1] = count2;
 		 count1++;
@@ -448,6 +453,7 @@ bool read()
 				 //outFile << word <<  endl;
 
 				 count1++;
+				 count4++;
 			 }
 			 
 			 temp[count3] = demension_count;
@@ -457,6 +463,8 @@ bool read()
 		 csv_data.close();//读数据关闭
 
 		 count2++;
+		 DataBlock_size[iii-1] = count4;
+		 count4 = 0;
 
 	 }
 	 
