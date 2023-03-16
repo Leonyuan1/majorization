@@ -22,7 +22,7 @@
 using namespace std;
 
 
-double temp[1000] = { 0 };//定义的一个中间数组 用来存储读入数据调用操作
+double temp[620] = { 0 };//定义的一个中间数组 用来存储读入数据调用操作
 
 
 
@@ -393,7 +393,7 @@ bool read()
 	int demension_count = 0;//计数维数
 	int count1 = 0;//计数数组光标
 	int count2 = 1;//用来计数数据块数
-	int count3 = 0;//用来存储维数位的光标
+	int count3 = 0;//用来存储维数位的下标
 	int demension = 0;//用来传输维数
 
 	////******读数据操作  将数据读入一维数组里
@@ -401,14 +401,15 @@ bool read()
 	 cout << "请输入你要读取的数据块数：" <<   endl;
 	 cin >> data_num;
 
-	 count3 = count1;
-	 count1++;
-	 temp[count1] = count2;
-	 count1++;
+	 
 	 for (int iii = 1; iii <= data_num; iii++)
 	 {
+		 count3 = count1;
+		 count1++;
+		 temp[count1] = count2;
+		 count1++;
 		 string DataFile_name;
-		 cout << "请输入第"<<iii<<"个数据文件名（加后缀）:" << endl;
+		 cout << "请输入第 "<<iii<<" 个数据文件名（加后缀）:" << endl;
 		 cin >> DataFile_name;
 		 ifstream csv_data(DataFile_name, ios::in);//数据文件为test
 		 string line;//字符串line用来存储一行的数据
@@ -420,7 +421,7 @@ bool read()
 			 return false;
 		 }
 		 else {
-			 cout << "the data"<<iii<<"is opened successfully!!!!" << endl;
+			 cout << "the data "<<iii<<" is opened successfully!!!!" << endl;
 		 }
 
 		 istringstream sin;         //将整行字符串line读入到字符串istringstream中
@@ -453,17 +454,15 @@ bool read()
 		 }
 		 temp[count1] = -3.1415926;
 		 count1++;
-		 temp[count1] = demension;
 		 csv_data.close();//读数据关闭
 
+		 count2++;
+
 	 }
+	 
 	
 	return true;
 }
-
-
-
-
 
 
 
@@ -472,7 +471,7 @@ int main()//用来读取数据和操作
 	read();
 	PARTICLE A;
 	A.SetDim(3);
-	for (int i = 0; i < 1000; i++)
+	for (int i = 0; i < 620; i++)
 	{
 		cout << temp[i] << endl;
 	}
